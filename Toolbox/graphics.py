@@ -38,7 +38,7 @@ def display_coords(df: pd.DataFrame,
         img = drawpoint(img, (row[1][cols[0]],row[1][cols[0]]),
                         radius=radius, circle_color=color)
 
-        if(display_num):
+        if (display_num):
             draw.text((row[1][cols[0]], row[1][cols[0]]), str(i+1), fill=font_color,
                       font=ImageFont.truetype(font_family, font_size))
 
@@ -95,7 +95,7 @@ def drawlineAround(img: np.ndarray,
                    color: Tuple = (0, 0, 255),
                    width: int = 5) -> Image:
 
-    if(border is None):
+    if (border is None):
         border = generateAroundArea(center[0], center[1], offset)
 
     img = drawline(img, (border["x_start"],border["y_start"]), (border["x_end"], border["y_start"]), color=color, width=width)
@@ -115,8 +115,9 @@ def distance(x1: Union[int, float],
 
 
 def imshow(path: Union[str, np.ndarray],
-           coords: Union[List[int], Tuple] = None,
-           marker_size=None,
+           coords: Union[List[int], Tuple, List[List[int]]] = None,
+           marker_size: int = None,
+           marker_color: Tuple = (255, 0, 0),
            figsize: Tuple = (20, 50)) -> None:
 
     if (type(path) is str):
@@ -124,7 +125,7 @@ def imshow(path: Union[str, np.ndarray],
     else:
         img = path.copy()
     
-    if(len(img.shape) > 2):
+    if (len(img.shape) > 2):
         # If image is already in RGB, the next line will raise an error
         try:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -136,21 +137,20 @@ def imshow(path: Union[str, np.ndarray],
     
     plt.figure(figsize=figsize)
     
-    if(not coords is None):
-        if(marker_size is None):
+    if (not coords is None):
+        if (marker_size is None):
             marker_size = img.shape[0]/40
         
         # Convert to numpy for data manipulation
         coords = np.array(coords)
         
         # If there is only one coord
-        if(len(coords.shape) == 1):
-            cv2.circle(img,(coords[0], coords[1]), int(marker_size), (255,0,0), -1)
-            #plt.plot(coords[0], coords[1], marker='o', markersize=marker_size, color="red")
-        else:
-            for coord in coords:
-                cv2.circle(img,(coord[0], coord[1]), int(marker_size), (255,0,0), -1)
-                #plt.plot(coord[0], coord[1], marker='o', markersize=marker_size, color="red")
+        if (len(coords.shape) == 1):
+            coords = np.array([coords])
+
+        for coord in coords:
+            cv2.circle(img,(coord[0], coord[1]), int(marker_size), marker_color, -1)
+            #plt.plot(coord[0], coord[1], marker='o', markersize=marker_size, color="red")
     
     plt.imshow(img)
     plt.show()
