@@ -154,3 +154,15 @@ def imshow(path: Union[str, np.ndarray],
     
     plt.imshow(img)
     plt.show()
+
+
+def pixels_to_pts(pixels: Union[int, float]):
+    # Based on W3C standard:
+    # https://www.w3.org/TR/css3-values/#absolute-lengths
+    return pixels * 72 / 96
+
+
+def pts_to_pixels(pts: Union[int, float]):
+    # Based on W3C standard:
+    # https://www.w3.org/TR/css3-values/#absolute-lengths
+    return pts * 96 / 72
